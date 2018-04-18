@@ -9,10 +9,10 @@ public class Category {
     String category;
     List<News> newsList = new ArrayList<>();
 
-    public Category(String category, Date newsDate , String newsString) {
+    public Category(String category, Date newsDate , String newsString, int id) {
 
         this.category = category;
-        News n = new News(newsString,newsDate);
+        News n = new News(newsString,newsDate,id);
         this.newsList.add(n);
     }
     public List<News> GetNewsList()
@@ -26,5 +26,10 @@ public class Category {
     public void SetCategoryName(String categoryName)
     {
         this.category = categoryName;
+    }
+    public void AddNewsToCategory(String newsString, Date newsDate, int newsID)
+    {
+        News n = new News(newsString,newsDate,newsID);
+        this.newsList.add(n);
     }
 }

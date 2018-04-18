@@ -2,7 +2,6 @@ package Java;
 
 import java.util.*;
 
-
 public class Start {
     public static void main(String[] args)
     {
@@ -28,10 +27,120 @@ public class Start {
                 case 3:
                     UpdateData(authorList);
                     break;
+                case 4:
+                    DeleteData(authorList);
+                    break;
             }
         }
         while(selection != 5);
 
+    }
+
+    private static int ReturnNewNewsId(int[] id)
+    {
+        int Id = id[0];
+        id[0]++;
+        return  Id;
+
+    }
+    private static void DeleteData(List<Author> authorList)
+    {
+        Scanner scanner = new Scanner(System.in);
+        int selection;
+        System.out.println("Please choose option:");
+        System.out.println("1.Delete author");
+        System.out.println("2.Delete category");
+        System.out.println("3.Delete news");
+        System.out.println("4.Exit");
+        selection = scanner.nextInt();
+        switch (selection)
+        {
+            case 1:
+                DeleteAuthor(authorList);
+                break;
+            case 2:
+                DeleteCategory(authorList);
+                break;
+            case 3:
+                DeleteNews(authorList);
+                break;
+        }
+    }
+
+    private static void DeleteAuthor(List<Author> authorList)
+    {
+        Scanner scanner = new Scanner(System.in);
+        String nameAuthor;
+        System.out.println("Enter name of author who you want to delete: ");
+        nameAuthor = scanner.next();
+        for(int i=0;i<authorList.size();i++)
+        {
+            if(authorList.get(i).GetAuthorName().equals(nameAuthor))
+            {
+                authorList.remove(i);
+                break;
+            }
+
+        }
+    }
+
+    private static void DeleteNews(List<Author> authorList)
+    {
+        Scanner scanner = new Scanner(System.in);
+        int newsID;
+        String nameCategory;
+        System.out.println("Enter name of category whose news you want to delete(Selected news will be deleted from all categories): ");
+        nameCategory = scanner.next();
+        for(int i =0;i<authorList.size();i++)
+        {
+            for(int j=0;j<authorList.get(i).GetCategories().size();j++)
+            {
+                if(authorList.get(i).GetCategories().get(j).GetCategoryName().equals(nameCategory))
+                {
+                    for (int k=0;k<authorList.get(i).GetCategories().get(j).GetNewsList().size();k++)
+                        System.out.printf("%d\t %s\t %s\t \n",authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetId(),authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetNews(),authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetNewsDate().toString());
+                }
+
+            }
+        }
+        System.out.println("Enter id of news which you want to delete: ");
+        newsID=scanner.nextInt();
+        for(int i =0;i<authorList.size();i++)
+        {
+            for(int j=0;j<authorList.get(i).GetCategories().size();j++)
+            {
+                if(authorList.get(i).GetCategories().get(j).GetCategoryName().equals(nameCategory))
+                {
+                    for (int k=0;k<authorList.get(i).GetCategories().get(j).GetNewsList().size();k++)
+                    {
+                        if(authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetId() == newsID)
+                        {
+                            authorList.get(i).GetCategories().get(j).GetNewsList().remove(k);
+                            break;
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    private static void DeleteCategory(List<Author> authorList)
+    {
+        Scanner scanner = new Scanner(System.in);
+        String nameCategory;
+        System.out.println("Enter name of category which you want to delete: ");
+        nameCategory = scanner.next();
+        for(int i = 0;i<authorList.size();i++)
+        {
+            for(int j=0;j<authorList.get(i).GetCategories().size();j++)
+            {
+                if(authorList.get(i).GetCategories().get(j).GetCategoryName().equals(nameCategory))
+                    authorList.get(i).GetCategories().remove(j);
+            }
+        }
     }
 
     private static void UpdateData(List<Author> authorList)
@@ -40,7 +149,7 @@ public class Start {
         int selection;
         System.out.println("Please choose option:");
         System.out.println("1.Update author name");
-        System.out.println("2.Create category name");
+        System.out.println("2.Update category name");
         System.out.println("3.Update news & news date");
         System.out.println("4.Exit");
         selection = scanner.nextInt();
@@ -93,11 +202,12 @@ public class Start {
 
     private static void UpdateNews(List<Author> authorList)
     {
-        //Vijest ce morat imat id,jer vijest moze biti u vise kategorija,pa neces ic po kategorijama i mjenjat svaku posebno
         Scanner scanner = new Scanner(System.in);
+        String newsNewData;
+        String newsNewDate;
         String authorName;
         String categoryName;
-        int newsNumber;
+        int newsID;
         System.out.print("Enter author's name: ");
         authorName = scanner.next();
         System.out.print("Enter the name of category that contains news which you want to change: ");
@@ -109,12 +219,31 @@ public class Start {
                 if(authorList.get(i).GetCategories().get(j).GetCategoryName().equals(categoryName))
                 {
                     for(int k=0;k<authorList.get(i).GetCategories().get(j).GetNewsList().size();k++)
-                        System.out.printf("%d . %s\t %s",k,authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetNews(),authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetNewsDate().toString());
+                        System.out.printf("%d\t %s\t %s \n",authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetId(),authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetNews(),authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetNewsDate().toString());
                 }
             }
         }
-        System.out.print("Enter the number of news that you want to change: ");
-        newsNumber = scanner.nextInt();
+        System.out.print("Enter the id of news that you want to change: ");
+        newsID = scanner.nextInt();
+        System.out.print("Enter news data: ");
+        newsNewData = scanner.next();
+        System.out.print("Enter new date: ");
+        newsNewDate = scanner.next();
+        String[] dateSplitted = newsNewDate.split("/");
+        for(int i=0; i < authorList.size();i++)
+        {
+            for(int j=0;j<authorList.get(i).GetCategories().size();j++)
+            {
+                for(int k=0;k<authorList.get(i).GetCategories().get(j).GetNewsList().size();k++)
+                {
+                    if(authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetId() == newsID)
+                    {
+                        authorList.get(i).GetCategories().get(j).GetNewsList().get(k).setNews(newsNewData);
+                        authorList.get(i).GetCategories().get(j).GetNewsList().get(k).setNewsDate(new Date(Integer.parseInt(dateSplitted[2]),Integer.parseInt(dateSplitted[1]),Integer.parseInt(dateSplitted[0])));
+                    }
+                }
+            }
+        }
 
     }
 
@@ -147,23 +276,61 @@ public class Start {
         String nameAuthor;
         String nameCategory;
         String news;
+        int newsID = NewsId.GetNewNewsId();
         String newsDateString;
         String[] newsDateSplitted;
+        String[] categoriesSplitted;
         System.out.print("Enter the name of author for who you want to add news: ");
         nameAuthor = scanner.next();
-        System.out.print("Enter the category name: ");
+        System.out.print("Enter the category name(separate multiple categories with ','): ");
         nameCategory = scanner.next();
         System.out.print("Enter the news: ");
         news = scanner.next();
         System.out.print("Enter news date(dd/mm/yyyy): ");
         newsDateString = scanner.next();
         newsDateSplitted = newsDateString.split("/");
+        categoriesSplitted = nameCategory.split(",");
+
+
+        boolean CategoryExists= false;
+
+        for(int i=0;i<categoriesSplitted.length;i++)
+        {
+            CategoryExists=false;
+            for(int j=0;j<authorList.size();j++)
+            {
+                if(authorList.get(j).GetAuthorName().equals(nameAuthor))
+                {
+                   for(int k=0;k<authorList.get(j).GetCategories().size();k++)
+                   {
+                      if(authorList.get(j).GetCategories().get(k).GetCategoryName().equals(categoriesSplitted[i]))
+                      {
+                          CategoryExists=true;
+                          authorList.get(j).GetCategories().get(k).AddNewsToCategory(news,new Date(Integer.parseInt(newsDateSplitted[2]),Integer.parseInt(newsDateSplitted[1]),Integer.parseInt(newsDateSplitted[0])),newsID);
+                      }
+
+                   }
+                   if(!CategoryExists)
+                   {
+                       authorList.get(j).AddCategoryAndNews(categoriesSplitted[i],new Date(Integer.parseInt(newsDateSplitted[2]),Integer.parseInt(newsDateSplitted[1]),Integer.parseInt(newsDateSplitted[0])),news,newsID);
+                   }
+
+                }
+            }
+        }
+
+
+
+
+
+
+
         for(int i=0; i < authorList.size();i++)
         {
 
             if(authorList.get(i).GetAuthorName().equals(nameAuthor))
             {
-                authorList.get(i).AddCategoryAndNews(nameCategory,new Date(Integer.parseInt(newsDateSplitted[2]),Integer.parseInt(newsDateSplitted[1]),Integer.parseInt(newsDateSplitted[0])),news);
+                authorList.get(i).AddCategoryAndNews(nameCategory,new Date(Integer.parseInt(newsDateSplitted[2]),Integer.parseInt(newsDateSplitted[1]),Integer.parseInt(newsDateSplitted[0])),news,NewsId.GetNewNewsId());
             }
         }
         return authorList;
@@ -182,21 +349,39 @@ public class Start {
             String NewsDateString = scanner.next();
             String news = scanner.next();
             dateSplitted = NewsDateString.split("/");
-            Author a = new Author(name,category,new Date(Integer.parseInt(dateSplitted[2]),Integer.parseInt(dateSplitted[1]),Integer.parseInt(dateSplitted[0])),news);
+            Author a = new Author(name,category,new Date(Integer.parseInt(dateSplitted[2]),Integer.parseInt(dateSplitted[1]),Integer.parseInt(dateSplitted[0])),news,NewsId.GetNewNewsId());
             authorList.add(a);
         }
         else
         {
-            //Moras napraviti razliku izmedu postojeceg i novog autora,korisnik nece unositi podatak da li autor vec postoji ili ne
-            System.out.println("Enter category author name, category of news, date of news and news itself(dd/mm/yyyy)-Category must have at least one author and news to exist");
+            boolean authorAlreadyExists=false;
+            int i;
+            System.out.println("Enter author name, category of news, date of news(dd/mm/yyyy) and news itself-Category must have at least one author and news to exist");
             String[] dateSplitted;
             String name = scanner.next();
             String category = scanner.next();
             String NewsDateString = scanner.next();
             String news = scanner.next();
             dateSplitted = NewsDateString.split("/");
-            Author a = new Author(name,category,new Date(Integer.parseInt(dateSplitted[2]),Integer.parseInt(dateSplitted[1]),Integer.parseInt(dateSplitted[0])),news);
-            authorList.add(a);
+            for(i=0;i<authorList.size();i++)
+            {
+                if(authorList.get(i).GetAuthorName().equals(name))
+                {
+                    authorAlreadyExists=true;
+                    break;
+                }
+
+            }
+            if(!authorAlreadyExists)
+            {
+                Author a = new Author(name,category,new Date(Integer.parseInt(dateSplitted[2]),Integer.parseInt(dateSplitted[1]),Integer.parseInt(dateSplitted[0])),news,NewsId.GetNewNewsId());
+                authorList.add(a);
+            }
+            else
+            {
+                authorList.get(i).GetCategories().add(new Category(category,new Date(Integer.parseInt(dateSplitted[2]),Integer.parseInt(dateSplitted[1]),Integer.parseInt(dateSplitted[0])),news,NewsId.GetNewNewsId()));
+            }
+
         }
 
     }
