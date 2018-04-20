@@ -1,7 +1,16 @@
 package Java;
 
 import java.util.*;
+/*
+        Za sortiranje po vijestima koristen je datum, a kako postoji implementirano rjesenje za sortiranje po datumu u klasi Date korištena je ta klasa, iako je rad na toj klasi obustavljen.
 
+        Za testiranje programa unošeni su stringovi bez razmaka, a datum koji se ispisivao na godinu dodaje još 1900(svojstvo date klase) što pri ispisu nije oduzimano(nije napravljen parser),zato za npr. datum 01.01.2000
+        rezultat će biti 01.01.3900.
+
+        Razlog ne korištenja baza podataka je bolje upoznavanje s programskim jezikom java.
+
+
+ */
 public class Start {
     public static void main(String[] args)
     {
@@ -109,19 +118,15 @@ public class Start {
         {
             for(int j=0;j<authorList.get(i).GetCategories().size();j++)
             {
-                if(authorList.get(i).GetCategories().get(j).GetCategoryName().equals(nameCategory))
+                for (int k=0;k<authorList.get(i).GetCategories().get(j).GetNewsList().size();k++)
                 {
-                    for (int k=0;k<authorList.get(i).GetCategories().get(j).GetNewsList().size();k++)
+                    if(authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetId() == newsID)
                     {
-                        if(authorList.get(i).GetCategories().get(j).GetNewsList().get(k).GetId() == newsID)
-                        {
-                            authorList.get(i).GetCategories().get(j).GetNewsList().remove(k);
-                            break;
-                        }
-
+                        authorList.get(i).GetCategories().get(j).GetNewsList().remove(k);
+                        break;
                     }
-                }
 
+                }
             }
         }
 
@@ -270,7 +275,7 @@ public class Start {
                 break;
         }
     }
-    private static List<Author> AddNews(List<Author> authorList)
+    private static void AddNews(List<Author> authorList)
     {
         Scanner scanner = new Scanner(System.in);
         String nameAuthor;
@@ -318,23 +323,6 @@ public class Start {
                 }
             }
         }
-
-
-
-
-
-
-
-        for(int i=0; i < authorList.size();i++)
-        {
-
-            if(authorList.get(i).GetAuthorName().equals(nameAuthor))
-            {
-                authorList.get(i).AddCategoryAndNews(nameCategory,new Date(Integer.parseInt(newsDateSplitted[2]),Integer.parseInt(newsDateSplitted[1]),Integer.parseInt(newsDateSplitted[0])),news,NewsId.GetNewNewsId());
-            }
-        }
-        return authorList;
-
     }
 
     private static void AddAuthorOrCategory(List<Author> authorList,boolean AuthorMode)
@@ -505,7 +493,5 @@ public class Start {
         }
 
     }
-
-
 }
 
